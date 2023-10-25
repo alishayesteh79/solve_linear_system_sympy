@@ -1,0 +1,43 @@
+import numpy as np
+import sympy
+
+# inputting the matrices
+m = int(input('\n enter the number of matrix \'A\' rows:'))
+n = int(input('\n enter the number of matrix \'A\' columns:'))
+A_entries = list(map(float, input('enter the entries of A in a single line, seprated by space: ').split()))
+b_entries = list(map(float, input('enter the entries of b in a sinlge line, seprated by space: ').split()))
+
+A = np.array(A_entries)
+A = A.reshape(m,n)
+b = np.array(b_entries)
+b = b.reshape(m,1)
+print('\nThe inputed matrix is :\n\nA:\n', A, '\n\nb:\n', b)
+
+x_list = []
+for i in range(n):
+    x_list.append(sympy.Symbol('x'+str(i)))
+X = np.array(x_list)
+X = X.reshape(n,1)
+print('\nX:\n',X,'\n\n')
+
+# Remainder matrix :
+r = b - np.matmul(A,X)
+
+#determining the norm^2
+t = sympy.Symbol('t')
+norm_r = t
+for i in range(m):
+    norm_r += r[i]**2
+norm_r -= t
+
+for i in norm_r :
+    norm_r = i
+norm_r = sympy.expand(norm_r)
+
+equations = []
+for i in range(n):
+    equations.append(sympy.diff(norm_r, X[i][0]))
+
+# solve new system :
+solutions = sympy.solve(equations, [i[0] for i in X] )
+print(solutions)
